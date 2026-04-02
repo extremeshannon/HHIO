@@ -1,9 +1,15 @@
 # HHIO — https://github.com/extremeshannon/HHIO
 # Static site (nginx) + small FastAPI API (/health, /health/db, /docs).
 #
+# Web listens on 0.0.0.0:8003 (all interfaces). Open firewall on VPS, e.g.:
+#   sudo ufw allow 8003/tcp && sudo ufw reload
+#   (or cloud security group: inbound TCP 8003)
+#
+# Local:  http://127.0.0.1:8003/   Public: http://YOUR_SERVER_IP:8003/
+# Loopback-only option: docker compose -f docker-compose.yml -f docker-compose.local.yml up -d --build
+#
 # Dev (site only; DB check fails until DB_* are set):
 #   docker compose up -d --build
-#   open http://127.0.0.1:8003/
 #
 # Dev + MalfunctionDZ Postgres on host (platform-py publishes 5433):
 #   cp .env.example .env   # set DB_HOST=host.docker.internal DB_PORT=5433
@@ -19,7 +25,7 @@ services:
       dockerfile: docker/Dockerfile.web
     container_name: hhio_web
     ports:
-      - "127.0.0.1:8003:80"
+      - "8003:80"
     depends_on:
       api:
         condition: service_started
@@ -30,7 +36,8 @@ services:
       dockerfile: docker/Dockerfile.api
     container_name: hhio_api
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
       DB_HOST: ${DB_HOST:-}
       DB_PORT: ${DB_PORT:-5432}
