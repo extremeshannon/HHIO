@@ -1,0 +1,14 @@
+# VPS: restart policies; trust reverse-proxy headers on API.
+
+services:
+  web:
+    restart: unless-stopped
+
+  api:
+    restart: unless-stopped
+    command: >
+      uvicorn app.main:app
+      --host 0.0.0.0
+      --port 8000
+      --proxy-headers
+      --forwarded-allow-ips="*"

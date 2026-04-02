@@ -1,0 +1,7 @@
+# Dev machine: reach Postgres on the host (e.g. platform-py db published as localhost:5433).
+# Use with .env: DB_HOST=host.docker.internal  DB_PORT=5433
+
+services:
+  api:
+    extra_hosts:
+      - "host.docker.internal:host-gateway"

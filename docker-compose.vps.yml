@@ -1,0 +1,12 @@
+# Attach API to MalfunctionDZ Postgres (container platform_py_db).
+# Requires: platform stack up and Docker network platform_platform.
+
+services:
+  api:
+    networks:
+      - default
+      - platform_platform
+
+networks:
+  platform_platform:
+    external: true
